@@ -16,10 +16,15 @@ public class Channel {
 
 	@Override
 	public String toString() {
-		return "name = " + name + "|id = " + id;
+		return "name = " + name + "|id = " + id + "|broadcast 1 = "
+				+ broadcastList.get(1).getBeskrivelse();
 	}
 
 	public void addBroadcast(Broadcast b) {
 		broadcastList.add(b);
+	}
+
+	public Broadcast getBroadcast(int index) {
+		return broadcastList.get(index);
 	}
 }

@@ -66,5 +66,52 @@ public class IOManager {
 
 	public void connectBroadcast(ArrayList<Channel> ch) {
 
+		Element rootNode = document.getRootElement();
+		List programList = rootNode.getChildren("programme");
+		String id = "";
+
+		for (int i = 0; i < programList.size(); i++) {
+
+			Element node = (Element) programList.get(i);
+
+			id = node.getAttribute("channel").getValue();
+			int counter = 0;
+
+			String start = node.getAttributeValue("start");
+			int year = Integer.parseInt(start.substring(0, 4));
+			int month = Integer.parseInt(start.substring(4, 6));
+			int day = Integer.parseInt(start.substring(6, 8));
+			int hour = Integer.parseInt(start.substring(8, 10));
+			int min = Integer.parseInt(start.substring(10, 12));
+
+			Time startTime = new Time(year, month, day, hour, min);
+
+			String name = node.getChildText("title");
+			String description = node.getChildText("desc");
+
+			// Making the list of categories
+			List categoryList = node.getChildren("category");
+			ArrayList<String> categories = new ArrayList<String>();
+			for (int j = 0; j < categoryList.size(); j++) {
+				Element category = (Element) categoryList.get(j);
+				categories.add(category.getValue());
+			}
+
+			// int duration =
+			// Integer.parseInt(node.getChild("length").getValue());
+
+			ch.get(counter)
+					.addBroadcast(
+							new Broadcast(name, description, startTime,
+									categories, 20));
+
+			if (i != programList.size() - 1) {
+				Element nextProg = (Element) programList.get(i + 1);
+				if (id != nextProg.getValue()) {
+					counter++;
+				}
+			}
+
+		}
 	}
 }

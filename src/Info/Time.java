@@ -4,15 +4,15 @@ public class Time {
 	private int year;
 	private int month;
 	private int day;
-	private int startTimeHour;
-	private int startTimeMin;
+	private int timeHour;
+	private int timeMin;
 
-	public Time(int y, int m, int d, int sh, int sMin) {
+	public Time(int y, int m, int d, int tH, int sMin) {
 		year = y;
 		month = m;
 		day = d;
-		startTimeHour = sh;
-		startTimeMin = sMin;
+		timeHour = tH;
+		timeMin = sMin;
 	}
 
 	public int getYear() {
@@ -27,12 +27,12 @@ public class Time {
 		return day;
 	}
 
-	public int getStartTimeHour() {
-		return startTimeHour;
+	public int getTimeHour() {
+		return timeHour;
 	}
 
-	public int getStartTimeMin() {
-		return startTimeMin;
+	public int getTimeMin() {
+		return timeMin;
 	}
 
 }
