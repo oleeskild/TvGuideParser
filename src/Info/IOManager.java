@@ -69,13 +69,12 @@ public class IOManager {
 		Element rootNode = document.getRootElement();
 		List programList = rootNode.getChildren("programme");
 		String id = "";
-
+		int counter = 0;
 		for (int i = 0; i < programList.size(); i++) {
 
 			Element node = (Element) programList.get(i);
 
 			id = node.getAttribute("channel").getValue();
-			int counter = 0;
 
 			String start = node.getAttributeValue("start");
 			int year = Integer.parseInt(start.substring(0, 4));
