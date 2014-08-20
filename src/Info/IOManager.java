@@ -19,10 +19,10 @@ public class IOManager {
 	private Document document;
 
 	public IOManager() {
-		builder = new SAXBuilder();
-		xmlFile = new File("xmltv.xml");
+		this.builder = new SAXBuilder();
+		this.xmlFile = new File("xmltv.xml");
 		try {
-			document = (Document) builder.build(xmlFile);
+			this.document = (Document) this.builder.build(this.xmlFile);
 		} catch (JDOMException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,7 +40,7 @@ public class IOManager {
 	}
 
 	/**
-	 * Creates an array of channel objects containg all the channels found in
+	 * Creates an array of channel objects containing all the channels found in
 	 * the xml file
 	 * 
 	 * @return an arraylist with channels
@@ -49,7 +49,7 @@ public class IOManager {
 
 		ArrayList<Channel> channelList = new ArrayList<Channel>();
 
-		Element rootNode = document.getRootElement();
+		Element rootNode = this.document.getRootElement();
 		List list = rootNode.getChildren("channel");
 
 		for (int i = 0; i < list.size(); i++) {
@@ -66,27 +66,52 @@ public class IOManager {
 
 	public void connectBroadcast(ArrayList<Channel> ch) {
 
-		Element rootNode = document.getRootElement();
+		Element rootNode = this.document.getRootElement();
 		List programList = rootNode.getChildren("programme");
+
+		Element node;
+
 		String id = "";
-		int counter = 0;
+		String start, stop;
+		String name, description, durationS;
+
+		// Variables holding both start and stoptime in for-loop
+		int year, month, day, hour, min, duration;
+
+		// Time variables using the integers above as arguments
+		Time startTime, stopTime;
+
 		for (int i = 0; i < programList.size(); i++) {
 
-			Element node = (Element) programList.get(i);
+			node = (Element) programList.get(i);
 
 			id = node.getAttribute("channel").getValue();
 
-			String start = node.getAttributeValue("start");
-			int year = Integer.parseInt(start.substring(0, 4));
-			int month = Integer.parseInt(start.substring(4, 6));
-			int day = Integer.parseInt(start.substring(6, 8));
-			int hour = Integer.parseInt(start.substring(8, 10));
-			int min = Integer.parseInt(start.substring(10, 12));
+			start = node.getAttributeValue("start");
+			year = Integer.parseInt(start.substring(0, 4));
+			month = Integer.parseInt(start.substring(4, 6));
+			day = Integer.parseInt(start.substring(6, 8));
+			hour = Integer.parseInt(start.substring(8, 10));
+			min = Integer.parseInt(start.substring(10, 12));
 
-			Time startTime = new Time(year, month, day, hour, min);
+			startTime = new Time(year, month, day, hour, min);
 
-			String name = node.getChildText("title");
-			String description = node.getChildText("desc");
+			stop = node.getAttributeValue("stop");
+			year = Integer.parseInt(stop.substring(0, 4));
+			month = Integer.parseInt(stop.substring(4, 6));
+			day = Integer.parseInt(stop.substring(6, 8));
+			hour = Integer.parseInt(stop.substring(8, 10));
+			min = Integer.parseInt(stop.substring(10, 12));
+
+			stopTime = new Time(year, month, day, hour, min);
+
+			name = node.getChildText("title");
+			description = node.getChildText("desc");
+			durationS = node.getChildText("length");
+			duration = 0;
+			if (durationS != null) {
+				duration = Integer.parseInt(durationS);
+			}
 
 			// Making the list of categories
 			List categoryList = node.getChildren("category");
@@ -96,18 +121,12 @@ public class IOManager {
 				categories.add(category.getValue());
 			}
 
-			// int duration =
-			// Integer.parseInt(node.getChild("length").getValue());
-
-			ch.get(counter)
-					.addBroadcast(
+			for (int j = 0; j < ch.size(); j++) {
+				if (ch.get(j).getId().equals(id)) {
+					ch.get(j).addBroadcast(
 							new Broadcast(name, description, startTime,
-									categories, 20));
-
-			if (i != programList.size() - 1) {
-				Element nextProg = (Element) programList.get(i + 1);
-				if (id != nextProg.getValue()) {
-					counter++;
+									stopTime, categories, duration));
+					break;
 				}
 			}
 
