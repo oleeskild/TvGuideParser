@@ -7,17 +7,11 @@ public class TvGuideParser {
 		IOManager iom = new IOManager();
 
 		ArrayList<Channel> kanaler = iom.getChannels();
-
 		iom.connectBroadcast(kanaler);
 
-		// System.out.println(kanaler.get(5).getBroadcast(3).getName());
-
-		// for (int i = 0; i < kanaler.size(); i++) {
-		// System.out.println(kanaler.get(i));
-		// }
-
-		for (int j = 0; j < kanaler.get(0).getNumberOfBroadcast(); j++) {
-			System.out.println(kanaler.get(0).getBroadcast(j));
+		for (int j = 0; j < kanaler.size(); j++) {
+			iom.writeFile("/Users/oleeskild/Documents/Kanaler/", kanaler.get(j));
 		}
+	
 	}
 }

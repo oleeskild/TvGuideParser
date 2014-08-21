@@ -1,9 +1,17 @@
 package Info;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Channel {
+public class Channel implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4163942207029525677L;
 	private String name;
 	private String id;
 	private ArrayList<Broadcast> broadcastList;
@@ -43,4 +51,13 @@ public class Channel {
 	public int getNumberOfBroadcast() {
 		return this.broadcastList.size();
 	}
+	
+	public void writeObject(String filePath) throws IOException{
+		FileOutputStream fileOut = new FileOutputStream(filePath);
+		ObjectOutputStream out = new ObjectOutputStream(fileOut);
+		out.writeObject(this);
+		out.close();
+		fileOut.close();
+	}
 }
+

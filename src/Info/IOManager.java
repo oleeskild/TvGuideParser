@@ -3,6 +3,7 @@ package Info;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +30,33 @@ public class IOManager {
 		}
 	}
 
-	public void write(String fileName) {
-		try (FileWriter fw = new FileWriter(fileName, false)) {
+	public void writeFile(String fileName, Channel kanal) {
+		
+		
+		File fileChannel = new File(fileName + kanal.getName().replace("/", " ") + ".txt");
+		
+		try {
+			fileChannel.createNewFile();
+		} catch (IOException e) {
+			System.out.println("Failed to get file handle");
+		}
+		
+		try (FileWriter fw = new FileWriter(fileChannel, false)) {
 			PrintWriter pw = new PrintWriter(fw);
-			pw.println();
+			for (int j = 0; j < kanal.getNumberOfBroadcast(); j++) {
+				pw.println(kanal.getBroadcast(j));
+			}
 			pw.close();
 		} catch (Exception ex) {
 			System.err.println(ex);
+		}
+	}
+	
+	public void writeObject(String filePath, Channel kanal){
+		try {
+			kanal.writeObject(filePath + kanal.getName().replace("/", " "));
+		} catch (IOException e) {
+			//TODO Try to write again or something like that!
 		}
 	}
 
@@ -64,6 +85,10 @@ public class IOManager {
 		return channelList;
 	}
 
+	/**
+	 * Connects all the broadcasts in the xml file to the right channel in the channel list provided in the parameters
+	 * @param ch An arraylist of channels
+	 */
 	public void connectBroadcast(ArrayList<Channel> ch) {
 
 		Element rootNode = this.document.getRootElement();
